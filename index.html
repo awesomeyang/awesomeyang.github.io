@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
 
+
 <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <script src="javascripts/vue.js"></script>
-    <script src="javascripts/data.js"></script>
+    <script src="javascripts/postdata.js"></script>
+    <script src="javascripts/pako/pako.min.js"></script>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -167,7 +169,7 @@
 </head>
 
 <body>
-    <img id="backgroundimg" src="images/rm.jpg">
+    <img id="backgroundimg" src="images/rm1.jpg">
 
     <div id="leftbar">
         <div id="block1">
@@ -196,10 +198,10 @@
                 <span id="book_rew">{{bookrew}}</span>
             </div>
             <div id="postlist" v-show="view_list">
-                <div :id="item.id" class="colorhead postlist_item" v-for="item in postlist" @click="view_content(item.id)">
-                    <p id="title" style="font-size:larger;color:rgb(34,35,118)">{{item.title}}</p>
+                <div :id="item.postintro.id" class="colorhead postlist_item" v-for="item in postlist" @click="view_content(item.postintro.id)">
+                    <p id="title" style="font-size:larger;color:rgb(34,35,118)">{{item.postintro.title}}</p>
                     <!--<p id="simintro" style="font-size:smaller;color:rgb(34,35,118);">{{item.intro}}</p>内容简介动画表现未完成-->
-                    <p id="date" style="font-size:medium;color:rgb(34,35,118)">{{item.date}}</p>
+                    <p id="date" style="font-size:medium;color:rgb(34,35,118)">{{item.postintro.date}}</p>
                 </div>
             </div>
             <img id="after" class="colorhead" style="right:0%" src="images/right.svg" @click="after()">
@@ -209,6 +211,21 @@
     </div>
 
     <script>
+        var post_data = data();
+        var sum = post_data.length;
+        for (var i = 0; i < sum; i++) {
+            var data = JSON.parse(post_data[i]);
+            post_data[i] = data
+        }
+        var search = function(id) {
+            var sum = post_data.length;
+            for (var i = 0; i < sum; i++) {
+                //var data = JSON.parse(post_data[i]);
+                if (post_data[i].postintro.id == id) {
+                    return post_data[i].post.content;
+                }
+            }
+        }
         var leftbar = new Vue({
             el: '#leftbar',
             data: {
@@ -222,22 +239,13 @@
         var advisor = new Vue({
             el: '#advisor',
             data: {
+                postflag: 0,
                 view_book: false,
                 view_list: true,
                 book_selected: false,
                 list_selected: true,
                 bookrew: "bookrew",
-                postlist: [{
-                    id: 123456,
-                    title: "t1",
-                    intro: 'in1',
-                    date: 'd1'
-                }, {
-                    id: 789456,
-                    title: "t2",
-                    intro: 'in2',
-                    date: 'd2'
-                }],
+                postlist: post_data.slice(0, 4),
             },
             methods: {
                 book_selectedf: function() {
@@ -252,22 +260,50 @@
                     this.list_selected = true;
                     this.view_list = true;
                 },
-                view_content: function(event) {
-                    console.log(event); // 查看事件对象内部数据结构
-
+                view_content: function(id) {
+                    var data = search(id);
+                    postview.change_content(data);
                 },
                 before: function() {
-                    console.log('before');
+                    if (this.postflag == 0) {
+                        this.postlist = post_data.slice(post_data.length - 4, post_data.length);
+                        this.postflag = post_data.length - 4;
+                        console.log(this.postflag);
+                    } else if (this.postflag <= 4) {
+                        this.postflag = 0;
+                        this.postlist = post_data.slice(this.postflag, this.postflag + 4);
+                        console.log(this.postflag);
+                    } else {
+                        this.postflag -= 4;
+                        this.postlist = post_data.slice(this.postflag, this.postflag + 4);
+                        console.log(this.postflag);
+                    }
+                    console.log(this.postflag);
                 },
                 after: function() {
-                    console.log('after');
+                    if (post_data.length - this.postflag <= 4) {
+                        this.postlist = post_data.slice(this.postflag, post_data.length);
+                        this.postflag = 0;
+                        console.log(this.postflag);
+                    } else {
+                        this.postflag += 4;
+                        this.postlist = post_data.slice(this.postflag, post_data.length);
+                        console.log(this.postflag);
+                    }
+                    console.log(this.postflag);
                 },
-            }
+            },
+
         });
         var postview = new Vue({
             el: "#postview",
             data: {
-                content: "<p style='corlor:blue;'>test</p>",
+                content: "",
+            },
+            methods: {
+                change_content: function(content) {
+                    this.content = content;
+                }
             }
         })
     </script>
