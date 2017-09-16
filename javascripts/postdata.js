@@ -1,0 +1,1 @@
+var data=function(){ var data=['{"postintro":{"id":1505582587,"title":"第一篇帖子 ","date":"2017-09-17"},"post":{"id":1505582587,"content":"<p>\xa0 \xa0 \xa0 \xa0 \xa0 \xa0\xa0 这是第一篇帖子<br/></p>"}}'];return data;}
