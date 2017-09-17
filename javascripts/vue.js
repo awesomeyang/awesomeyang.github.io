@@ -265,7 +265,7 @@
         /**
          * Whether to suppress warnings.
          */
-        silent: true,
+        silent: false,
 
         /**
          * Show production mode tip message on boot?
@@ -280,7 +280,7 @@
         /**
          * Whether to record perf
          */
-        performance: 'production',
+        performance: 'develop',
 
         /**
          * Error handler for watcher errors
