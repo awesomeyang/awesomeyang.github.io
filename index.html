@@ -146,6 +146,8 @@
             top: 1.5%;
             right: 5%;
             z-index: 10;
+            overflow: auto;
+            -webkit-overflow-scrolling: rgba(255, 255, 255, 0.5);
         }
         
         #backgroundimg {
@@ -188,7 +190,7 @@
             <div>{{info.introduction}}</div>
             <p id="education">教育经历</p>
             <div>{{info.education}}</div>
-            <p id="award">所获奖项</p>
+            <p id="award">兴趣点</p>
             <div>{{info.award}}</div>
 
         </div>
@@ -205,10 +207,10 @@
                 <span id="book_rew">{{bookrew}}</span>
             </div>
             <div id="postlist" v-show="view_list">
-                <div :id="item.postintro.id" class="colorhead postlist_item" v-for="item in postlist" @click="view_content(item.postintro.id)">
-                    <p id="title" style="font-size:larger;color:rgb(34,35,118)">{{item.postintro.title}}</p>
+                <div :id="item.id" class="colorhead postlist_item" v-for="item in postlist" @click="view_content(item.id)">
+                    <p id="title" style="font-size:larger;color:rgb(34,35,118)">{{item.title}}</p>
                     <!--<p id="simintro" style="font-size:smaller;color:rgb(34,35,118);">{{item.intro}}</p>内容简介动画表现未完成-->
-                    <p id="date" style="font-size:medium;color:rgb(34,35,118)">{{item.postintro.date}}</p>
+                    <p id="date" style="font-size:medium;color:rgb(34,35,118)">{{item.date}}</p>
                 </div>
             </div>
             <img id="after" class="colorhead" style="right:0%" src="images/right.svg" @click="after()">
@@ -220,16 +222,11 @@
     <script>
         var post_data = data || [];
         var sum = post_data.length;
-        for (var i = 0; i < sum; i++) {
-            var data = JSON.parse(post_data[i]);
-            post_data[i] = data
-        }
         var search = function(id) {
             var sum = post_data.length;
             for (var i = 0; i < sum; i++) {
-                //var data = JSON.parse(post_data[i]);
-                if (post_data[i].postintro.id == id) {
-                    return post_data[i].post.content;
+                if (post_data[i].id == id) {
+                    return post_data[i].content;
                 }
             }
         }
@@ -239,7 +236,7 @@
                 info: {
                     introduction: '挣好多钱 在丛林里建一个小木屋 研究自己喜欢的东西 \n 党外马克思主义者',
                     education: '西安交通大学 物理学',
-                    award: '知乎第一喷子',
+                    award: '量子计算机与量子编程 \n 计算机 \n 黑科技\n 历史哲学\n推理科幻小说 ',
                 }
             }
         });
