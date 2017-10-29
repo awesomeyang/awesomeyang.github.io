@@ -225,12 +225,12 @@
         var search_text = function(text) {
             var sum = post_data.length;
             var outcome = [];
-            for (var i = 0; i < sum; i++) {
-                if (post_data[i].title.match(text)) {
+            for (var i = 0; i < 2; i++) {
+                if (post_data[i].title.search(text) == 0) {
                     outcome.push(post_data[i])
                 }
-                return outcome;
             }
+            return outcome;
         }
         var leftbar = new Vue({
             el: '#leftbar',
@@ -309,7 +309,7 @@
                         this.datalist = a;
                         this.searchl = a.length;
 
-                    }
+                    } else this.datalist = [];
                 },
                 postflag: function(val, old) {
                     if (val < 0) this.postflag = 0;
